@@ -1,17 +1,14 @@
 # Powered Up Hub Control
 
-![Web panel with two Powered Up hubs connected to Train 1, each with a motor and lights](docs/graphics/powered-up-hub-control-panel.jpg)
+![Powered Up Hub Control — ESP32-S3, MQTT and Bluetooth LE model railway control](docs/graphics/powered-up-hub-control-banner.png)
 
-*Web interface screenshot with demonstration data: two hubs assigned to one train,
-each with a motor and lights. This is the actual panel, not an illustration.*
+ESP32 firmware for **nControl model railway control through MQTT**. Configure
+trains, LEGO hub ports, motors and lights using an offline node editor served by
+the ESP32.
 
-ESP32-S3 firmware that forwards **nControl MQTT train commands to up to eight
-LEGO Powered Up hubs over Bluetooth Low Energy**. Configure trains, hub ports,
-motors and lights using an offline node editor served by the ESP32.
-
-The web interface, help, diagnostics and firmware error messages are in English.
-This repository contains the working eight-hub bridge. The proposed onboard
-controller, LEGO remote support, Hall sensors and F1/F2 functions are **not implemented**.
+**This edition:** ESP32-S3, up to eight LEGO Powered Up hubs over Bluetooth LE.
+The proposed onboard controller, LEGO remote support, Hall sensors and F1/F2
+functions are **not implemented**.
 
 ## Features
 
@@ -29,6 +26,25 @@ controller, LEGO remote support, Hall sensors and F1/F2 functions are **not impl
 - JSON import/export, OTA upload and diagnostics in the same interface.
 - Wi-Fi setup access point, DHCP hostname, mDNS and MQTT availability metadata.
 - No CDN or internet connection is needed to use the web panel.
+
+## Shared web interface
+
+Both Hub Control projects use the same offline node editor, dark theme and
+interaction patterns: a **#232323 canvas**, **#343434 grid**, 24 px spacing,
+compact 22 px node controls, sidebar settings and explicit **Save and apply**.
+The palette, ports and common buttons share one design. Hardware features differ.
+
+The interface, help and diagnostics are in English. Everything is served locally
+by the ESP32; no CDN or internet connection is needed at runtime. Renaming a node
+does not change its MQTT label. The nControl and ESP32 root nodes are protected
+against deletion.
+
+Companion projects: [I/O Hub Control](https://github.com/Vampir8/io-hub-control)
+and [Powered Up Hub Control](https://github.com/Vampir8/powered-up-hub-control).
+
+![Powered Up Hub Control — shared dark panel](docs/graphics/powered-up-hub-control-panel.png)
+
+*Documentation preview with sample values; no physical outputs are operated.*
 
 ## Hardware
 
@@ -123,7 +139,7 @@ readings are refreshed periodically. STOP and output commands take priority.
 Only recently advertised configured BLE addresses are attempted; failed attempts
 time out and retry with backoff, without blocking other enabled hub slots.
 
-## Build
+## Build and upload
 
 Requirements: Python 3, PlatformIO Core and Node.js 18+ for rebuilding the editor.
 Pinned firmware dependencies: Espressif platform **6.11.0**, ESP-IDF **5.4.1**
@@ -156,6 +172,8 @@ The editor uses BaklavaJS **2.8.1** and Vue **3.5.22**. The pinned renderer patc
 are checked during bundling; review them before upgrading. Third-party notices
 are in `web-editor/THIRD-PARTY-NOTICES.txt` and the generated HTML.
 
+## Configuration and testing
+
 ### Local configuration
 
 `tools/provision.py` creates local `provisioning.json` and generated headers.
@@ -175,7 +193,7 @@ diagnostics → OTA update**. The panel requests STOP, waits for delivery and
 shows upload progress. A successful upload restarts the ESP32. A failed OTA
 attempt may leave the maintenance lock active until restart.
 
-## Verification
+### Verification
 
 ```sh
 node web-editor/test.cjs
