@@ -138,36 +138,59 @@ time out and retry with backoff, without blocking other enabled hub slots.
 
 ## Build and upload
 
-Requirements: Python 3, PlatformIO Core and Node.js 18+ for rebuilding the editor.
-Pinned firmware dependencies: Espressif platform **6.11.0**, ESP-IDF **5.4.1**
-(`framework-espidf` **3.50401.0**) and `espressif/mdns` **1.8.2**.
+Python 3.11+ and Node.js 18+ are recommended. Versions used by this project:
 
-The generated offline HTML is included, so building the firmware does not require npm.
+| Component | Version |
+|---|---|
+| PlatformIO Core | 6.1.18 |
+| Espressif32 platform | 6.11.0 |
+| ESP-IDF | 5.4.1 |
+| framework-espidf package | 3.50401.0 |
+| espressif/mdns | 1.8.2 |
+| BaklavaJS / Vue | 2.8.1 / 3.5.22 |
+| esbuild | 0.25.10 |
+
+Run these commands from the project directory:
 
 ```sh
-pio run -e esp32s3 -j 2
+python -m pip install platformio==6.1.18
+python -m platformio pkg install -e esp32s3
+python -m platformio run -e esp32s3 -j 2
 python tools/audit_build.py
-pio run -e esp32s3 -t upload --upload-port YOUR_PORT -j 2
-pio device monitor --port YOUR_PORT --baud 115200
+python -m platformio device list
 ```
 
-Use the actual serial port, such as `COM5` or `/dev/ttyUSB0`. Build and flash boards
-one at a time. PlatformIO generates the web asset before dependency scanning so
-incremental builds include the current panel.
-
-To rebuild the editor:
+The `esp32s3` environment uses `esp32-s3-devkitc-1` with a **16 MB flash**
+override and this project's partition table. Check the board and actual serial
+port, then replace COMx below with its port (or Linux/macOS device path):
 
 ```sh
-cd web-editor
-npm ci
-npm run build
-cd ..
-node web-editor/test.cjs
+python -m platformio run -e esp32s3 -t upload --upload-port COMx -j 2
+python -m platformio device monitor --port COMx --baud 115200
 ```
 
-The editor uses BaklavaJS **2.8.1** and Vue **3.5.22**. The pinned renderer patches
-are checked during bundling; review them before upgrading. Third-party notices
-are in `web-editor/THIRD-PARTY-NOTICES.txt` and the generated HTML.
+**The web panel is embedded in the firmware.** Uploading firmware updates both
+the controller and its interface; there is no separate filesystem upload.
+Prebuilt `main/web/index.html` is committed, so npm is only needed when rebuilding
+the panel. Build and upload boards one at a time.
+
+To rebuild the web panel from its source:
+
+```sh
+npm --prefix web-editor ci
+node web-editor/build.cjs
+node web-editor/test.cjs
+python -m platformio run -e esp32s3 -j 2
+python tools/audit_build.py
+```
+
+PlatformIO generates the embedded web asset before dependency scanning, so
+incremental firmware builds include the current HTML. The pinned renderer patches
+are checked during bundling. Third-party notices are included in
+`web-editor/THIRD-PARTY-NOTICES.txt` and the generated HTML.
+
+The partition table contains two 3 MB application slots for OTA updates.
+See **Configuration and testing → OTA** below for uploading through the web panel.
 
 ## Configuration and testing
 
