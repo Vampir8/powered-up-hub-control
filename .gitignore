@@ -26,3 +26,6 @@ web-editor/esbuild
 web-editor/esbuild.cmd
 web-editor/esbuild.ps1
 web-editor/ui-test.cjs
+
+# Local design notes are not part of the published firmware documentation.
+docs/FUTURE-NCONTROL.md

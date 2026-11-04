@@ -1,14 +1,10 @@
 # Powered Up Hub Control
 
-![Powered Up Hub Control — ESP32-S3, MQTT and Bluetooth LE model railway control](docs/graphics/powered-up-hub-control-banner.png)
-
 ESP32 firmware for **nControl model railway control through MQTT**. Configure
 trains, LEGO hub ports, motors and lights using an offline node editor served by
 the ESP32.
 
 **This edition:** ESP32-S3, up to eight LEGO Powered Up hubs over Bluetooth LE.
-The proposed onboard controller, LEGO remote support, Hall sensors and F1/F2
-functions are **not implemented**.
 
 ## Features
 
@@ -27,22 +23,17 @@ functions are **not implemented**.
 - Wi-Fi setup access point, DHCP hostname, mDNS and MQTT availability metadata.
 - No CDN or internet connection is needed to use the web panel.
 
-## Shared web interface
+## Web interface
 
-Both Hub Control projects use the same offline node editor, dark theme and
-interaction patterns: a **#232323 canvas**, **#343434 grid**, 24 px spacing,
-compact 22 px node controls, sidebar settings and explicit **Save and apply**.
-The palette, ports and common buttons share one design. Hardware features differ.
+An offline node editor with a dark canvas, a 24 px grid, compact controls,
+sidebar settings and explicit **Save and apply** for configuration changes.
 
 The interface, help and diagnostics are in English. Everything is served locally
 by the ESP32; no CDN or internet connection is needed at runtime. Renaming a node
 does not change its MQTT label. The nControl and ESP32 root nodes are protected
 against deletion.
 
-Companion projects: [I/O Hub Control](https://github.com/Vampir8/io-hub-control)
-and [Powered Up Hub Control](https://github.com/Vampir8/powered-up-hub-control).
-
-![Powered Up Hub Control — shared dark panel](docs/graphics/powered-up-hub-control-panel.png)
+![Powered Up Hub Control — web panel](docs/graphics/powered-up-hub-control-panel.png)
 
 *Documentation preview with sample values; no physical outputs are operated.*
 
@@ -87,35 +78,41 @@ Deleting a Train or hub hides its slot; **+ Train** and **+ Hub** restore slots.
 
 ## MQTT compatibility
 
-The bridge subscribes to **`nControl/websocket/rx`** using TCP MQTT, normally port
-1883. It accepts the existing nControl `T|...` protocol:
+The ESP32 is an MQTT client. Enter the nControl computer's broker address in
+**ESP32 Settings**; the default TCP port is **1883**. The bridge subscribes to
+**`nControl/websocket/rx`**, where nControl publishes train commands. The `rx`
+suffix is part of nControl's protocol naming.
 
-| Example | Meaning |
+Set each Train's **Label in nControl** to the exact tile label, including spaces
+and letter case. For a tile named `Train 1`, the supported commands are:
+
+| Example payload | Action |
 | --- | --- |
-| `T|Train 1|p,40` | Power, 0–100 |
-| `T|Train 1|f` | Forward |
-| `T|Train 1|r` | Reverse |
-| `T|Train 1|l,1` | Lights on; use 0 for off |
-| `T|Train 1|b,3` | UI battery indicator, 0–5 |
-| `T|Train 1|a,1` | UI active state, 0/1 |
+| `T\|Train 1\|p,40` | Set power to 40%; valid range is 0–100. Zero stops the train's outputs. |
+| `T\|Train 1\|f` | Select forward direction. |
+| `T\|Train 1\|r` | Select reverse direction. |
+| `T\|Train 1\|l,1` | Switch lights on; `l,0` switches them off. |
+| `T\|Train 1\|b,3` | Update the train's nControl battery indicator, range 0–5. |
+| `T\|Train 1\|a,1` | Update the train's nControl active indicator, 0 or 1. |
 
-Labels are case-sensitive and must match exactly. The battery and active fields
-display nControl UI state; they do not arm the drive. Actual hub battery readings
-come from BLE. Retained MQTT messages do not drive outputs. The bridge does not
-request or replay a saved `W|ST` power state after reconnection.
+The battery and active indicators do not start or enable motor movement. Actual
+hub battery percentages are read over BLE. Unknown labels, unsupported commands
+and malformed payloads are ignored. Retained messages do not operate outputs.
 
-Configure the broker to deliver the intended train command stream. This legacy
-protocol does not authenticate a command's Simulation/Operational origin.
+After MQTT reconnect the bridge subscribes again and keeps outputs stopped.
+It does not send `W|ST` or replay cached power commands. Motor movement requires
+a new non-retained power command; a direction command alone does not restart it.
+The T protocol carries no reliable Simulation/Operational mode indication.
 
-After each MQTT connection the device announces itself at
-`nControl/nodes/<node_id>/info` and publishes `{"online":true}` to
-`nControl/nodes/<node_id>/status`, using retained QoS 1. Its Last Will publishes
-`{"online":false}`. `node_id` derives from the device MAC and remains stable.
-Metadata includes name, client ID, type, model, firmware, IP and web URL; it
-contains no passwords or output assignments.
+After each MQTT connection the ESP32 publishes retained QoS 1 node metadata to
+`nControl/nodes/<node_id>/info` and `{"online":true}` to
+`nControl/nodes/<node_id>/status`. Its Last Will publishes `{"online":false}`.
+The stable node ID derives from the MAC address. Metadata includes the device
+name, client ID, model, firmware, IP and web URL.
 
-Diagnostic telemetry remains under the configurable `nControl/bridge/...`
-prefix. Changing that prefix does not change the command subscription.
+Diagnostic hub telemetry is published under the configured prefix, for example
+`nControl/bridge/esp32s3/status` and `nControl/bridge/esp32s3/hubs/1/state`.
+This prefix is separate from the incoming train-command topic.
 
 ## Output behavior
 
