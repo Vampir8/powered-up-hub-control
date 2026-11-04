@@ -1,0 +1,49 @@
+:root{font:13px system-ui,sans-serif;color:#eee;background:#232323;color-scheme:dark;--baklava-node-color-background:#353535;--baklava-node-interface-port-color:#ffdb24;--baklava-node-color-selected:#36b9bb;--baklava-control-color-primary:#169ea2}
+body,#app{height:100dvh;overflow:hidden}main{height:100%;display:flex;flex-direction:column}.topbar,.statusbar{flex-shrink:0}.workspace{height:auto!important;min-height:0!important;flex:1}.train-jump{background:#333;border:1px solid #555;border-radius:4px;padding:7px;max-width:140px}
+.baklava-editor{font-size:13px}.baklava-node>.__content>div>div{margin:2px 0}.baklava-node-interface{padding-top:2px;padding-bottom:2px}.baklava-node>.__content{padding:10px}.field{padding:2px 0!important}.readout{padding:3px 0!important}.baklava-node .__port{width:12px;height:12px;top:calc(50% - 6px)}
+*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit;color:inherit}button,a.btn{border:1px solid #555;border-radius:5px;background:#333;color:#eee;padding:8px 12px;cursor:pointer;text-decoration:none}button:hover,a.btn:hover{background:#494949}button:disabled{opacity:.5;cursor:default}.primary{background:#167b7e;border-color:#29b7bb}.stop{background:#a92b37;border-color:#e75864;font-weight:700}.topbar{display:flex;align-items:center;gap:9px;padding:10px 16px;background:#171717;border-bottom:1px solid #444;flex-wrap:wrap}.brand{margin-right:auto;font-size:16px;font-weight:700}.brand small{font-size:11px;color:#999;display:block;font-weight:400}.statusbar{display:flex;gap:18px;padding:8px 16px;background:#202020;color:#bbb;font-size:12px}.statusbar .good{color:#60dca1}.statusbar .bad{color:#e5b56a}.workspace{height:calc(100dvh - 103px);min-height:460px}.baklava-editor{height:100%;width:100%}.baklava-node{box-shadow:0 3px 12px #0008}.baklava-node .__title{font-weight:600}.baklava-node .__port{border:0!important}.baklava-node-interface.--input .__port{background:#19b6b7}.baklava-connection.offline{stroke:#999;stroke-dasharray:7 6}.baklava-node .__title .__menu{display:none}.field{padding:4px 0;display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%}.field label{color:#ddd;font-size:12px}.field input,.field select{background:#292929;border:1px solid #505050;border-radius:3px;padding:5px;min-width:0;max-width:125px;width:56%}.field input[type=checkbox]{width:16px}.field input[type=color]{height:29px;width:70px;padding:1px}.readout{font-size:12px;display:flex;flex-wrap:wrap;gap:6px;color:#bbb;padding:6px 0}.readout strong{color:#eee}.pill{background:#272727;padding:4px 7px;border-radius:4px}.battery{width:100%;height:5px;background:#222;border-radius:4px;overflow:hidden}.battery i{display:block;height:100%;background:#63ce91}.node-buttons{display:flex;gap:5px;flex-wrap:wrap;padding:4px 0}.node-buttons button{font-size:11px;padding:5px 7px}.hint{color:#aaa;font-size:11px;line-height:1.5;display:block}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:min(90vw,700px);padding:11px 17px;background:#133f41;border:1px solid #39878b;border-radius:7px;z-index:100;box-shadow:0 4px 20px #0008}.overlay{position:fixed;inset:0;background:#0008;z-index:50;display:flex;justify-content:flex-end}.drawer{width:min(480px,95vw);overflow:auto;background:#292929;padding:24px;box-shadow:-6px 0 30px #0008}.drawer h2{margin:0 0 20px}.drawer p,.drawer li{line-height:1.6;color:#ccc}.drawer label{display:block;margin:10px 0}.drawer input,.drawer select{background:#222;border:1px solid #555;border-radius:4px;padding:7px;width:100%}.drawer input[type=checkbox]{width:auto}.drawer .actions{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.scan-row{border:1px solid #555;padding:12px;margin:10px 0;border-radius:6px}.scan-row small{display:block;color:#aaa}.drawer pre{font:11px monospace;white-space:pre-wrap;overflow-wrap:anywhere}.close{float:right}.legend{color:#999;font-size:11px}.dirty{color:#f3cb66!important}.helptext{padding:5px 16px;font-size:11px;color:#aaa;background:#202020}.wide .workspace{height:calc(100dvh - 128px)}@media(max-width:750px){.brand{width:100%}.statusbar{gap:10px;flex-wrap:wrap}.workspace{height:calc(100dvh - 160px)}}
+
+.led-swatch{width:18px;height:18px;border-radius:50%;border:1px solid #777}.drawer input[type=color]{height:42px;padding:3px}.drawer details{margin:20px 0}.drawer summary{cursor:pointer;color:#ccc}
+
+/* Fixed 24 px world grid: outer sizes, title, sockets and rows. */
+.baklava-node{border:0;outline:1px solid #555;overflow:visible}
+.baklava-node>.__title{height:24px;line-height:24px;padding:0 12px;border-radius:3px 3px 0 0}
+.baklava-node>.__content{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:12px 0}
+.baklava-node>.__content>.__inputs,.baklava-node>.__content>.__outputs{display:contents}
+.baklava-node>.__content>div>div{margin:0;padding:0 8px}
+.baklava-node-interface{min-width:0;font-size:11px;line-height:24px}
+.baklava-node-interface.--input .__port{left:-6px}
+.baklava-node-interface.--output .__port{right:-6px}
+.baklava-node .readout{padding:0!important;gap:0 4px;line-height:24px}
+.baklava-node .pill{padding:0 4px;height:22px;line-height:22px;margin:1px 0}
+.baklava-node .node-buttons{padding:0;line-height:24px}
+.baklava-node .node-buttons button{padding:0 5px;height:22px;line-height:20px;margin:1px 0}
+.baklava-node .hint{line-height:24px}
+.baklava-node .battery{margin:3px 0;height:5px}
+.baklava-node .led-swatch{width:12px;height:12px;margin:6px 0}
+.tool-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}.tool-tabs button{padding:7px 9px}
+.tool-card{background:#333;border:1px solid #555;border-radius:5px;padding:16px;margin:14px 0}
+.tool-card h3{margin:0 0 12px;font-size:15px}.tool-card p{margin:10px 0}.tool-card textarea{width:100%;min-height:220px;resize:vertical;background:#222;color:#eee;border:1px solid #555;border-radius:4px;padding:10px;font:12px monospace;margin-top:7px}
+.tool-card input[type=file]{margin-top:7px;font-size:12px}.tool-card input::file-selector-button{background:#444;color:#eee;border:1px solid #666;padding:6px;border-radius:3px;cursor:pointer}
+.tool-card progress{display:block;width:100%;height:10px;accent-color:#19b6b7;margin:18px 0 8px}.tool-card small{color:#aaa}.file-info{overflow-wrap:anywhere}.tool-status{padding:12px;background:#133f41;border:1px solid #39878b;border-radius:4px;overflow-wrap:anywhere}.tool-status.error{background:#47252a;border-color:#a94d59}.tool-card pre{max-height:50vh;overflow:auto}
+
+.baklava-node .__port{width:8px;height:8px;top:calc(50% - 4px)}
+.baklava-node-interface.--input .__port{left:-4px}.baklava-node-interface.--output .__port{right:-4px}
+.led-palette{display:grid;grid-template-columns:repeat(6,32px);gap:12px;margin:12px 0 20px}.led-palette .led-color{width:32px;height:32px;padding:0;border-radius:3px;border:1px solid #888}.led-palette .led-color[aria-pressed=true]{outline:2px solid #fff;outline-offset:3px}.led-palette .led-color:hover{box-shadow:0 0 0 2px #19b6b7}.led-palette .led-color:focus-visible{outline:2px solid #19b6b7;outline-offset:3px}
+
+/* Hub I/O uses the same controls and geometry as the Powered Up panel. */
+.baklava-node .__title .__menu{display:block}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.fields>*{min-width:0}.drawer .fields label{margin:4px 0}.drawer h3{margin-top:0}
+.drawer .tool-card{overflow:hidden}.drawer .led-palette{max-width:100%;grid-template-columns:repeat(6,32px);gap:12px}
+.lamps{display:flex;gap:6px;line-height:24px;padding:0}.lamp{width:20px;height:20px;margin:2px 0;border:1px solid #777;border-radius:50%;display:grid;place-items:center;font-size:9px;color:#fff;text-shadow:0 0 2px #000}
+.blinking{animation:lamp-blink var(--period,1000ms) steps(1,end) infinite}@keyframes lamp-blink{50%{opacity:.2}}
+.state-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}.state-tabs .selected{background:#167b7e;border-color:#29b7bb}
+.drawer input:disabled,.drawer select:disabled{opacity:.6}.drawer .tool-card button{margin:3px}
+@media(max-width:550px){.fields{grid-template-columns:1fr}.drawer{width:95vw;padding:18px}.topbar{gap:6px}.topbar button{padding:6px 8px}}
+
+/* Shared with lego_esp32power. nControl paintEvent canvas: RGB 200; gridColor: RGB 180. */
+:root{--baklava-editor-background-pattern-default:#c8c8c8;--baklava-editor-background-pattern-line:#b4b4b4;--baklava-editor-background-pattern-black:#b4b4b4}
+.baklava-editor .background{background-image:linear-gradient(#b4b4b4 1px,transparent 1px),linear-gradient(90deg,#b4b4b4 1px,transparent 1px),linear-gradient(#b4b4b4 1px,transparent 1px),linear-gradient(90deg,#b4b4b4 1px,transparent 1px)}
+
+.advanced-settings{border:1px solid #555;border-radius:5px;padding:12px 16px;margin:14px 0;background:#303030}.advanced-settings>summary{cursor:pointer;font-size:13px;color:#ddd}.advanced-settings[open]>summary{margin-bottom:14px}.advanced-settings .tool-card{margin-bottom:0}

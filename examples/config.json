@@ -1,0 +1,208 @@
+{
+  "schema": 1,
+  "ssid": "",
+  "broker": "",
+  "username": "",
+  "client_id": "powered-up-hub-control-aabbccddeeff",
+  "prefix": "nControl/bridge/esp32s3",
+  "port": 1883,
+  "keepalive": 15,
+  "reconnect_ms": 5000,
+  "stop_gpio": -1,
+  "trains": [
+    {
+      "label": "Train 1",
+      "limit": 100,
+      "ramp_ms": 1500,
+      "brightness": 60,
+      "brake": false
+    },
+    {
+      "label": "Train 2",
+      "limit": 100,
+      "ramp_ms": 1500,
+      "brightness": 60,
+      "brake": false
+    },
+    {
+      "label": "Train 3",
+      "limit": 100,
+      "ramp_ms": 1500,
+      "brightness": 60,
+      "brake": false
+    },
+    {
+      "label": "Train 4",
+      "limit": 100,
+      "ramp_ms": 1500,
+      "brightness": 60,
+      "brake": false
+    },
+    {
+      "label": "Train 5",
+      "limit": 100,
+      "ramp_ms": 1500,
+      "brightness": 60,
+      "brake": false
+    },
+    {
+      "label": "Train 6",
+      "limit": 100,
+      "ramp_ms": 1500,
+      "brightness": 60,
+      "brake": false
+    },
+    {
+      "label": "Train 7",
+      "limit": 100,
+      "ramp_ms": 1500,
+      "brightness": 60,
+      "brake": false
+    },
+    {
+      "label": "Train 8",
+      "limit": 100,
+      "ramp_ms": 1500,
+      "brightness": 60,
+      "brake": false
+    }
+  ],
+  "hubs": [
+    {
+      "name": "Hub 1",
+      "address": "",
+      "address_type": 0,
+      "train": 0,
+      "lamp": -1,
+      "enabled": true,
+      "motor": [
+        0,
+        -1
+      ],
+      "polarity": [
+        1,
+        1
+      ],
+      "led_rgb": -1
+    },
+    {
+      "name": "Hub 2",
+      "address": "",
+      "address_type": 0,
+      "train": 1,
+      "lamp": -1,
+      "enabled": true,
+      "motor": [
+        0,
+        -1
+      ],
+      "polarity": [
+        1,
+        1
+      ],
+      "led_rgb": -1
+    },
+    {
+      "name": "Hub 3",
+      "address": "",
+      "address_type": 0,
+      "train": 2,
+      "lamp": -1,
+      "enabled": true,
+      "motor": [
+        0,
+        -1
+      ],
+      "polarity": [
+        1,
+        1
+      ],
+      "led_rgb": -1
+    },
+    {
+      "name": "Hub 4",
+      "address": "",
+      "address_type": 0,
+      "train": 3,
+      "lamp": -1,
+      "enabled": true,
+      "motor": [
+        0,
+        -1
+      ],
+      "polarity": [
+        1,
+        1
+      ],
+      "led_rgb": -1
+    },
+    {
+      "name": "Hub 5",
+      "address": "",
+      "address_type": 0,
+      "train": 4,
+      "lamp": -1,
+      "enabled": true,
+      "motor": [
+        0,
+        -1
+      ],
+      "polarity": [
+        1,
+        1
+      ],
+      "led_rgb": -1
+    },
+    {
+      "name": "Hub 6",
+      "address": "",
+      "address_type": 0,
+      "train": 5,
+      "lamp": -1,
+      "enabled": true,
+      "motor": [
+        0,
+        -1
+      ],
+      "polarity": [
+        1,
+        1
+      ],
+      "led_rgb": -1
+    },
+    {
+      "name": "Hub 7",
+      "address": "",
+      "address_type": 0,
+      "train": 6,
+      "lamp": -1,
+      "enabled": true,
+      "motor": [
+        0,
+        -1
+      ],
+      "polarity": [
+        1,
+        1
+      ],
+      "led_rgb": -1
+    },
+    {
+      "name": "Hub 8",
+      "address": "",
+      "address_type": 0,
+      "train": 7,
+      "lamp": -1,
+      "enabled": true,
+      "motor": [
+        0,
+        -1
+      ],
+      "polarity": [
+        1,
+        1
+      ],
+      "led_rgb": -1
+    }
+  ]
+}

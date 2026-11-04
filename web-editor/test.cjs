@@ -1,0 +1,44 @@
+// Exercise the real Baklava model, event guards and firmware configuration mapping.
+const fs=require('fs'),path=require('path'),esbuild=require('esbuild');
+const source=fs.readFileSync(path.join(__dirname,'src/app.js'),'utf8').replace(/start\(\);\s*$/,'');
+const checks=`
+const assert=(ok,label)=>{if(!ok)throw Error(label)};
+assert(LED_COLORS.length===24&&LED_COLORS.some(([name])=>name==='Sky blue'),'English color palette');
+const bundledHtml=require('fs').readFileSync(require('path').join(process.cwd(),'main/web/index.html'),'utf8');
+assert(bundledHtml.includes('lang="en"')&&!/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/.test(bundledHtml),'English offline panel');
+config=reactive(JSON.parse(require('fs').readFileSync(require('path').join(process.cwd(),'examples/config.json'),'utf8')));
+vm=useBaklava();graph=vm.displayedGraph;build();
+assert(graph.nodes.length===26,'existing devices rendered');
+assert(GRID===24&&LED_COLORS.length===24&&new Set(LED_COLORS.map(c=>c[1])).size===24,'24 px grid and 24 distinct LED presets');
+let train0=nodes.get('train0'),hub1=nodes.get('hub1');
+unlink(hub1);connect(train0.outputs.hub1,hub1.inputs.in);
+assert(config.hubs[0].train===0&&config.hubs[1].train===0,'two hubs on one train');
+assert(Object.values(train0.outputs).length>=4,'two spare outputs after assigning two hubs');
+const count=graph.connections.length;
+connect(nodes.get('nc').outputs.out,hub1.inputs.in);
+assert(graph.connections.length===count,'invalid connection rejected');
+const fixed=graph.connections.find(c=>c.from.bind?.kind==='espout');graph.removeConnection(fixed);
+assert(graph.connections.includes(fixed),'fixed ESP train mapping protected');
+graph.removeNode(nodes.get('train0'));assert(graph.nodes.length===25&&config.trains[0].hidden,'train can be deleted');assert(!graph.connections.some(c=>c.from.nodeId===train0.id||c.to.nodeId===train0.id),'deleted train leaves no wires');assert(config.hubs[0].train===-1&&config.hubs[1].train===-1,'train delete disconnects hubs');restoreSlot('train');assert(graph.nodes.length===26&&!config.trains[0].hidden,'train slot can be restored');train0=nodes.get('train0');
+const motor=nodes.get('motor0-0');motor.meta.polarity=-1;syncAssignments();
+assert(config.hubs[0].polarity[0]===-1,'motor direction persisted');
+unlink(motor);assert(config.hubs[0].motor.every(p=>p===-1),'device unlink clears physical port');
+const lamp=device('lamp','extra',-1,0);connect(nodes.get('hub0').outputs.p1,lamp.inputs.in);
+assert(config.hubs[0].lamp===1,'lamp port B persisted');
+const other=device('lamp','extra2',-1,0);connect(nodes.get('hub0').outputs.p0,other.inputs.in);
+assert(config.hubs[0].lamp===1&&!graph.connections.some(c=>c.to.nodeId===other.id),'one lamp per hub');
+unlink(nodes.get('esp'));assert(config.mqtt_enabled===false,'disconnect disables MQTT');
+connect(nodes.get('nc').outputs.out,nodes.get('esp').inputs.in);assert(config.mqtt_enabled===true,'reconnect enables MQTT');
+live.state={mqtt:true,hubs:Array.from({length:8},()=>({ready:true}))};wireState();assert(graph.connections.every(c=>!c.offline),'solid online lines');
+live.state.hubs[0].ready=false;wireState();assert(graph.connections.some(c=>c.offline),'dashed offline lines');
+view.snap=true;view.grid=GRID;train0.position={x:733,y:-27};snapNodes();assert(train0.position.x===744&&train0.position.y===-24,'grid snapping incl negative coordinates');
+view.snap=false;train0.position={x:733,y:27};snapNodes();assert(train0.position.x===733,'free movement');
+for(const coords of [[12,33,333,151],[400,70,60,111],[20,20,100,20]]){const pts=orthogonalRoute(...coords,GRID);assert(pts[0][0]===coords[0]&&pts[0][1]===coords[1],'route starts on socket');assert(pts[pts.length-1][0]===coords[2]&&pts[pts.length-1][1]===coords[3],'route ends on socket');for(let i=1;i<pts.length;i++)assert(pts[i][0]===pts[i-1][0]||pts[i][1]===pts[i-1][1],'all segments orthogonal');for(const point of pts.slice(2,-2))assert(point.every(x=>x%GRID===0),'intermediate bends on grid');}
+assert(graph.nodes.every(n=>[...Object.values(n.inputs),...Object.values(n.outputs)].every(i=>!i.meta?.set)),'no editable fields in tiles');
+const label=config.trains[0].label;nodes.get('train0').title='Display name';syncNodeNames();assert(config.trains[0].name==='Display name'&&config.trains[0].label===label,'rename train preserves MQTT label');
+nodes.get('hub0').title='New hub';syncNodeNames();assert(config.hubs[0].name==='New hub','hub rename persists');
+lamp.title='Named lights';syncNodeNames();assert(config.hubs[0].lamp_name==='Named lights','lamp alias persisted');const renamedMotor=device('motor','alias-test',1,1);connect(nodes.get('hub1').outputs.p1,renamedMotor.inputs.in);renamedMotor.title='New motor';syncNodeNames();assert(config.hubs[1].motor_name[config.hubs[1].motor.indexOf(1)]==='New motor','motor alias persisted');
+graph.removeNode(nodes.get('hub0'));assert(config.hubs[0].hidden&&!config.hubs[0].enabled&&config.hubs[0].train===-1,'hub delete disables and disconnects slot');restoreSlot('hub');assert(!config.hubs[0].hidden,'hub slot can be restored');
+console.log('PASS: grid snapping, free movement, 90 degree forward/backward routing on grid, status-only nodes;  actual Baklava graph mapping, multiple hubs, dynamic outputs, invalid connections, fixed trains, polarity, unlink, lamp exclusivity, MQTT assignment, live line state');
+`;
+esbuild.build({stdin:{contents:source+checks,resolveDir:path.join(__dirname,'src'),sourcefile:'graph-tests.js'},bundle:true,platform:'node',target:'node14',format:'cjs',write:false,alias:{vue:require.resolve('vue/dist/vue.runtime.esm-bundler.js')},define:{__VUE_OPTIONS_API__:'true',__VUE_PROD_DEVTOOLS__:'false',__VUE_PROD_HYDRATION_MISMATCH_DETAILS__:'false'}}).then(r=>{fs.writeFileSync(path.join(__dirname,'../test-results/graph-tests.cjs'),r.outputFiles[0].text);require('../test-results/graph-tests.cjs')}).catch(e=>{console.error(e);process.exit(1)});
