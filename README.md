@@ -1,6 +1,9 @@
 # Powered Up Hub Control
 
-![Powered Up Hub Control — ESP32-S3, MQTT and Bluetooth LE model railway control](docs/graphics/powered-up-hub-control-banner.png)
+![Web panel with two Powered Up hubs connected to Train 1, each with a motor and lights](docs/graphics/powered-up-hub-control-panel.jpg)
+
+*Web interface screenshot with demonstration data: two hubs assigned to one train,
+each with a motor and lights. This is the actual panel, not an illustration.*
 
 ESP32-S3 firmware that forwards **nControl MQTT train commands to up to eight
 LEGO Powered Up hubs over Bluetooth Low Energy**. Configure trains, hub ports,
